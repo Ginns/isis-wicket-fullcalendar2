@@ -16,6 +16,7 @@
  */
 package org.isisaddons.wicket.fullcalendar2.cpt.applib;
 
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableMap;
@@ -40,6 +41,6 @@ public interface Calendarable {
     /**
      * The events associated with this object, keyed by their corresponding {@link #getCalendarNames() calendar name}.
      */
-	ImmutableMap<String, CalendarEventable> getCalendarEvents();
+	ImmutableMap<String, List<? extends CalendarEventable>> getCalendarEvents();
 	
 }

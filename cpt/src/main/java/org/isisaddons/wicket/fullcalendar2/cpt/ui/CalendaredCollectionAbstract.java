@@ -84,14 +84,15 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
         }
 
         config.setAspectRatio(2.5f);
-        
-        config.getHeader().setLeft("prevYear,prev,next,nextYear, today");
+        config.setDefaultView("agendaWeek");
+        config.getHeader().setLeft("prevYear,prev,next,nextYear, today, month,agendaWeek");
         config.getHeader().setCenter("title");
         config.getHeader().setRight("");
 
         config.setLoading("function(bool) { if (bool) $(\"#loading\").show(); else $(\"#loading\").hide(); }");
 
-        config.setAllDaySlot(true);
+        config.setAllDaySlot(false);
+        config.setSlotEventOverlap(false);
         
         final FullCalendar calendar = new FullCalendarWithEventHandling(ID_FULL_CALENDAR, config, feedback);
         addOrReplace(calendar);

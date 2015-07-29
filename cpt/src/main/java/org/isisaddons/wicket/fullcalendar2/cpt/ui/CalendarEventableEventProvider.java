@@ -23,6 +23,9 @@ import com.google.common.base.Function;
 import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
 import org.apache.isis.viewer.wicket.model.models.EntityCollectionModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CalendarEventableEventProvider extends EventProviderAbstract {
 
     private static final long serialVersionUID = 1L;
@@ -34,11 +37,15 @@ public class CalendarEventableEventProvider extends EventProviderAbstract {
     }
 
     @Override
-    protected CalendarEvent calendarEventFor(Object domainObject, String calendarName) {
-        final CalendarEventable calendarEventable = (CalendarEventable)domainObject;
-        return calendarName.equals(calendarEventable.getCalendarName()) 
-                ? calendarEventable.toCalendarEvent() 
-                : null;
+    protected List<CalendarEvent> calendarEventFor(Object domainObject, String calendarName) {
+        final List<CalendarEventable> calendarEventables = (List<CalendarEventable>)domainObject;
+        List<CalendarEvent> calendarEvents = new ArrayList<CalendarEvent>();
+        for (CalendarEventable calendarEventable : calendarEventables) {
+            if (calendarName.equals(calendarEventable.getCalendarName())) {
+                calendarEvents.add(calendarEventable.toCalendarEvent());
+            }
+        }
+        return calendarEvents;
     }
 
     // //////////////////////////////////////

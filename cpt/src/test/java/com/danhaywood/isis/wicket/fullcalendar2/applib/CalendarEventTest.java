@@ -47,7 +47,7 @@ public class CalendarEventTest {
 
     @Test
     public void test3ArgConstructor() {
-        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar");
+        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", false);
         assertThat(calendarEvent.getDateTime(), is(newDateTime(2013,4,1)));
         assertThat(calendarEvent.getCalendarName(), is("foobar"));
         assertThat(calendarEvent.getTitle(), is("CAR-1234 foobar"));
@@ -56,7 +56,7 @@ public class CalendarEventTest {
     
     @Test
     public void test4ArgConstructor() {
-        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", "some notes");
+        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", false, "some notes");
         assertThat(calendarEvent.getDateTime(), is(newDateTime(2013,4,1)));
         assertThat(calendarEvent.getCalendarName(), is("foobar"));
         assertThat(calendarEvent.getTitle(), is("CAR-1234 foobar"));
@@ -65,7 +65,7 @@ public class CalendarEventTest {
 
     @Test
     public void testWithDateTime() {
-        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", "some notes");
+        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", false, "some notes");
         CalendarEvent calendarEvent2 = calendarEvent.withDateTime(newDateTime(2014,5,2));
         Assert.assertFalse(calendarEvent2 == calendarEvent);
         assertThat(calendarEvent.getDateTime(), is(newDateTime(2013,4,1)));
@@ -77,7 +77,7 @@ public class CalendarEventTest {
 
     @Test
     public void testWithCalendarName() {
-        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", "some notes");
+        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", false, "some notes");
         CalendarEvent calendarEvent2 = calendarEvent.withCalendarName("barfoo");
         Assert.assertFalse(calendarEvent2 == calendarEvent);
         assertThat(calendarEvent.getCalendarName(), is("foobar"));
@@ -89,7 +89,7 @@ public class CalendarEventTest {
 
     @Test
     public void testWithTitle() {
-        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", "some notes");
+        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", false, "some notes");
         CalendarEvent calendarEvent2 = calendarEvent.withTitle("CAR-1234 barfoo");
         Assert.assertFalse(calendarEvent2 == calendarEvent);
         assertThat(calendarEvent.getCalendarName(), is("foobar"));
@@ -101,7 +101,7 @@ public class CalendarEventTest {
     
     @Test
     public void testWithNotes() {
-        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", "some notes");
+        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "CAR-1234 foobar", false, "some notes");
         CalendarEvent calendarEvent2 = calendarEvent.withNotes("other notes");
         Assert.assertFalse(calendarEvent2 == calendarEvent);
         assertThat(calendarEvent.getNotes(), is("some notes"));
@@ -113,10 +113,10 @@ public class CalendarEventTest {
     
     @Test
     public void testEqualsAndHashCode() {
-        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "some notes");
-        CalendarEvent calendarEvent2 = new CalendarEvent(newDateTime(2013,4,1), "foobar", "other notes");
-        CalendarEvent calendarEvent3 = new CalendarEvent(newDateTime(2013,4,1), "foobaZ", "other notes");
-        CalendarEvent calendarEvent4 = new CalendarEvent(newDateTime(2013,4,2), "foobar", "other notes");
+        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "some notes", false);
+        CalendarEvent calendarEvent2 = new CalendarEvent(newDateTime(2013,4,1), "foobar", "other notes", false);
+        CalendarEvent calendarEvent3 = new CalendarEvent(newDateTime(2013,4,1), "foobaZ", "other notes", false);
+        CalendarEvent calendarEvent4 = new CalendarEvent(newDateTime(2013,4,2), "foobar", "other notes", false);
         
         Assert.assertFalse(calendarEvent2 == calendarEvent);
         assertThat(calendarEvent2, is(calendarEvent));
@@ -129,7 +129,7 @@ public class CalendarEventTest {
 
     @Test
     public void testToString() {
-        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "some notes");
+        CalendarEvent calendarEvent = new CalendarEvent(newDateTime(2013,4,1), "foobar", "some notes", false);
         assertThat(calendarEvent.toString(), matches("CalendarEvent\\{dateTime=2013-04-01.*, calendarName=foobar}"));
     }
     

@@ -16,6 +16,8 @@
  */
 package org.isisaddons.wicket.fullcalendar2.cpt.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
@@ -36,13 +38,29 @@ public class CalendarableEventProvider extends EventProviderAbstract {
         super(collectionModel, calendarName);
     }
 
-    protected CalendarEvent calendarEventFor(final Object domainObject, final String calendarName) {
+    protected List<CalendarEvent> calendarEventFor(final Object domainObject, final String calendarName) {
         final Calendarable calendarable = (Calendarable)domainObject;
-        final Map<String, CalendarEventable> calendarEvents = calendarable.getCalendarEvents();
-        final CalendarEventable calendarEventable = calendarEvents.get(calendarName);
-        return calendarEventable!=null
-                ?calendarEventable.toCalendarEvent()
-                :null;
+        final Map<String, List<? extends CalendarEventable>> calendarEventsMap = calendarable.getCalendarEvents();
+        List<? extends CalendarEventable> calendarEventables;
+        calendarEventables = calendarEventsMap.get(calendarName);
+        if (calendarEventables == null && calendarName.equals("Main")) {
+            calendarEventables = calendarEventsMap.get("Fillers");
+        } else if (calendarEventables == null && calendarName.equals("Fillers")) {
+            calendarEventables = calendarEventsMap.get("Main");
+        }
+        try {
+            List<CalendarEvent> calendarEvents = new ArrayList<CalendarEvent>();
+            for (CalendarEventable calendarEventable : calendarEventables) {
+                calendarEvents.add(calendarEventable.toCalendarEvent());
+            }
+            return calendarEvents != null
+                    ? calendarEvents
+                    : null;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     // //////////////////////////////////////

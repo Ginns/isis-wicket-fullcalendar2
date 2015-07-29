@@ -21,10 +21,6 @@ import net.ftlines.wicket.fullcalendar.CalendarResponse;
 import net.ftlines.wicket.fullcalendar.Config;
 import net.ftlines.wicket.fullcalendar.FullCalendar;
 import net.ftlines.wicket.fullcalendar.callback.ClickedEvent;
-
-import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-
 import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
 import org.apache.isis.core.metamodel.adapter.mgr.AdapterManager;
 import org.apache.isis.core.metamodel.adapter.oid.OidMarshaller;
@@ -34,11 +30,13 @@ import org.apache.isis.core.runtime.system.context.IsisContext;
 import org.apache.isis.core.runtime.system.persistence.PersistenceSession;
 import org.apache.isis.viewer.wicket.model.models.EntityModel;
 import org.apache.isis.viewer.wicket.ui.pages.entity.EntityPage;
+import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 final class FullCalendarWithEventHandling extends FullCalendar {
-    
+
     @SuppressWarnings("unused")
-	private final NotificationPanel feedback;
+    private final NotificationPanel feedback;
     private static final long serialVersionUID = 1L;
 
     FullCalendarWithEventHandling(String id, Config config, NotificationPanel feedback) {
@@ -47,10 +45,8 @@ final class FullCalendarWithEventHandling extends FullCalendar {
     }
 
     @Override
-    protected void onEventClicked(ClickedEvent event,
-            CalendarResponse response) {
-
-        final String oidStr = (String) event.getEvent().getPayload();
+    protected void onEventClicked(ClickedEvent event, CalendarResponse response) {
+        String oidStr = ((String) event.getEvent().getPayload());
         final RootOid oid = RootOidDefault.deString(oidStr, getOidMarshaller());
         final ObjectAdapter adapter = getAdapterManager().adapterFor(oid);
         final PageParameters params = new EntityModel(adapter).asPageParameters();
@@ -70,5 +66,5 @@ final class FullCalendarWithEventHandling extends FullCalendar {
     protected OidMarshaller getOidMarshaller() {
         return IsisContext.getOidMarshaller();
     }
-    
+
 }

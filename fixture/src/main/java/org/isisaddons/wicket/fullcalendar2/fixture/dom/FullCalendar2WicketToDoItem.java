@@ -396,7 +396,7 @@ public class FullCalendar2WicketToDoItem implements Comparable<FullCalendar2Wick
         if(getDueBy() == null) {
             return null;
         }
-        return new CalendarEvent(getDueBy().toDateTimeAtStartOfDay(), getCalendarName(), container.titleOf(this));
+        return new CalendarEvent(getDueBy().toDateTimeAtStartOfDay(), getCalendarName(), container.titleOf(this), false);
     }
 
     //endregion
