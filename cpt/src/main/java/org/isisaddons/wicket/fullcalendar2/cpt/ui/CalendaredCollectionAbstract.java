@@ -19,13 +19,6 @@ package org.isisaddons.wicket.fullcalendar2.cpt.ui;
 import java.util.Collection;
 import java.util.Set;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import net.ftlines.wicket.fullcalendar.Config;
-import net.ftlines.wicket.fullcalendar.EventProvider;
-import net.ftlines.wicket.fullcalendar.EventSource;
-import net.ftlines.wicket.fullcalendar.FullCalendar;
-import net.ftlines.wicket.fullcalendar.selector.EventSourceSelector;
-
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.markup.head.IHeaderResponse;
 
@@ -33,6 +26,13 @@ import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
 import org.apache.isis.viewer.wicket.model.models.EntityCollectionModel;
 import org.apache.isis.viewer.wicket.ui.panels.PanelAbstract;
 import org.apache.isis.viewer.wicket.ui.panels.PanelUtil;
+
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
+import net.ftlines.wicket.fullcalendar.Config;
+import net.ftlines.wicket.fullcalendar.EventProvider;
+import net.ftlines.wicket.fullcalendar.EventSource;
+import net.ftlines.wicket.fullcalendar.FullCalendar;
+import net.ftlines.wicket.fullcalendar.selector.EventSourceSelector;
 
 /**
  * {@link PanelAbstract Panel} that represents a {@link EntityCollectionModel
@@ -47,9 +47,9 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
     private static final String ID_FEEDBACK = "feedback";
 
     private final static String[] COLORS = {
-        "#63BA68", "#B1ADAC", "#E6CC7F"
+            "#63BA68", "#B1ADAC", "#E6CC7F"
     };
-    
+
     public CalendaredCollectionAbstract(final String id, final EntityCollectionModel model) {
         super(id, model);
 
@@ -59,7 +59,7 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
     private void buildGui() {
 
         final EntityCollectionModel model = getModel();
-        
+
         final NotificationPanel feedback = new NotificationPanel(ID_FEEDBACK);
         feedback.setOutputMarkupId(true);
         addOrReplace(feedback);
@@ -67,12 +67,12 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
         final Config config = new Config();
         config.setSelectable(true);
         config.setSelectHelper(false);
-        
+
         final Collection<ObjectAdapter> entityList = model.getObject();
         final Iterable<String> calendarNames = getCalendarNames(entityList);
 
-        int i=0;
-        for (final String calendarName: calendarNames) {
+        int i = 0;
+        for (final String calendarName : calendarNames) {
             final EventSource namedCalendar = new EventSource();
             namedCalendar.setTitle(calendarName);
             namedCalendar.setEventsProvider(newEventProvider(model, calendarName));
@@ -84,16 +84,17 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
         }
 
         config.setAspectRatio(2.5f);
-        config.setDefaultView("agendaWeek");
+        config.setDefaultView("month");
         config.getHeader().setLeft("prevYear,prev,next,nextYear, today, month,agendaWeek");
         config.getHeader().setCenter("title");
         config.getHeader().setRight("");
 
-        config.setLoading("function(bool) { if (bool) $(\"#loading\").show(); else $(\"#loading\").hide(); }");
+        // workaround for a bug that prevents events that run from saturday to sunday being loaded in week view: default view set to month and switch to agendaWeek on load
+        config.setLoading("function(bool) { if (bool) { $(\".fc\").fullCalendar(\"changeView\", \"agendaWeek\"); $(\"#loading\").show(); } else { $(\"#loading\").hide(); } }");
 
         config.setAllDaySlot(false);
         config.setSlotEventOverlap(false);
-        config.setLazyFetching(false);
+        config.setLazyFetching(true);
 
         System.out.println(config.toString());
 
@@ -107,7 +108,7 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
             final EntityCollectionModel model, final String calendarName);
 
     protected abstract Set<String> getCalendarNames(final Collection<ObjectAdapter> entityList);
-    
+
     @Override
     protected void onModelChanged() {
         buildGui();
