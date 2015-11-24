@@ -16,23 +16,35 @@
  */
 package org.isisaddons.wicket.fullcalendar2.cpt.ui;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
-import net.ftlines.wicket.fullcalendar.Event;
-import net.ftlines.wicket.fullcalendar.EventNotFoundException;
-import net.ftlines.wicket.fullcalendar.EventProvider;
-import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
-import org.apache.isis.core.runtime.system.context.IsisContext;
-import org.apache.isis.viewer.wicket.model.models.EntityCollectionModel;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
+
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import java.util.*;
+import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
+import org.apache.isis.core.metamodel.runtimecontext.ServicesInjector;
+import org.apache.isis.core.runtime.system.context.IsisContext;
+import org.apache.isis.core.runtime.system.persistence.PersistenceSession;
+import org.apache.isis.core.runtime.system.session.IsisSessionFactory;
+import org.apache.isis.viewer.wicket.model.models.EntityCollectionModel;
+
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarableDereferencingService;
+
+import net.ftlines.wicket.fullcalendar.Event;
+import net.ftlines.wicket.fullcalendar.EventNotFoundException;
+import net.ftlines.wicket.fullcalendar.EventProvider;
 
 public abstract class EventProviderAbstract implements EventProvider {
 
@@ -58,6 +70,19 @@ public abstract class EventProviderAbstract implements EventProvider {
     }
 
     protected abstract List<CalendarEvent> calendarEventFor(final Object domainObject, final String calendarName);
+
+    private Object dereference(final Object domainObject) {
+        final List<CalendarableDereferencingService> calendarableDereferencingServices =
+                getServicesInjector().lookupServices(
+                        CalendarableDereferencingService.class);
+        for (final CalendarableDereferencingService dereferencingService : calendarableDereferencingServices) {
+            final Object dereferencedObject = dereferencingService.dereference(domainObject);
+            if (dereferencedObject != domainObject) {
+                return dereferencedObject;
+            }
+        }
+        return domainObject;
+    }
 
     private Function<ObjectAdapter, List<Event>> newEvent(final String calendarName) {
         return new Function<ObjectAdapter, List<Event>>() {
@@ -99,7 +124,6 @@ public abstract class EventProviderAbstract implements EventProvider {
                         event.setColor("#BA6863");
                     }
 
-
                     events.add(event);
                     //event.setBackgroundColor(backgroundColor)
                     //event.setBorderColor(borderColor)
@@ -110,6 +134,7 @@ public abstract class EventProviderAbstract implements EventProvider {
                 }
 
                 return events;
+
             }
 
         };
@@ -173,4 +198,17 @@ public abstract class EventProviderAbstract implements EventProvider {
     public Event getEventForId(String id) throws EventNotFoundException {
         return eventById.get(id).get(0);
     }
+
+    PersistenceSession getPersistenceSession() {
+        return IsisContext.getPersistenceSession();
+    }
+
+    ServicesInjector getServicesInjector() {
+        return getSessionFactory().getServicesInjector();
+    }
+
+    IsisSessionFactory getSessionFactory() {
+        return IsisContext.getSessionFactory();
+    }
+
 }

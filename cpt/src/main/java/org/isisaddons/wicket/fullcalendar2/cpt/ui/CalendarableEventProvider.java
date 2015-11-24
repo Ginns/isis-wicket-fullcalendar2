@@ -20,24 +20,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.Calendarable;
 import com.google.common.base.Function;
 
 import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
 import org.apache.isis.viewer.wicket.model.models.EntityCollectionModel;
 
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.Calendarable;
+
 public class CalendarableEventProvider extends EventProviderAbstract {
 
     private static final long serialVersionUID = 1L;
 
-    // //////////////////////////////////////
-
-    public CalendarableEventProvider(final EntityCollectionModel collectionModel, final String calendarName) {
+    public CalendarableEventProvider(
+            final EntityCollectionModel collectionModel,
+            final String calendarName) {
         super(collectionModel, calendarName);
     }
 
+    @Override
     protected List<CalendarEvent> calendarEventFor(final Object domainObject, final String calendarName) {
         final Calendarable calendarable = (Calendarable)domainObject;
         final Map<String, List<? extends CalendarEventable>> calendarEventsMap = calendarable.getCalendarEvents();
@@ -63,12 +65,14 @@ public class CalendarableEventProvider extends EventProviderAbstract {
 
     }
 
-    // //////////////////////////////////////
-
     static final Function<ObjectAdapter, Iterable<String>> GET_CALENDAR_NAMES = new Function<ObjectAdapter, Iterable<String>>() {
         @Override
         public Iterable<String> apply(final ObjectAdapter input) {
-            final Calendarable calendarable = (Calendarable)input.getObject();
+            final Object domainObject = input.getObject();
+            if(domainObject == null || !(domainObject instanceof Calendarable)) {
+                return null;
+            }
+            final Calendarable calendarable = (Calendarable) domainObject;
             return calendarable.getCalendarNames();
         }
     };

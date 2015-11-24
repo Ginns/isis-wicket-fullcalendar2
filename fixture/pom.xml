@@ -54,7 +54,7 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
             <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-            <version>1.9.1-SNAPSHOT</version>
+            <version>1.11.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -86,7 +86,7 @@ language governing permissions and limitations under the License.
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <datanucleus-maven-plugin.version>4.0.0-release</datanucleus-maven-plugin.version>
+                <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
             </properties>
             <build>
                 <pluginManagement>

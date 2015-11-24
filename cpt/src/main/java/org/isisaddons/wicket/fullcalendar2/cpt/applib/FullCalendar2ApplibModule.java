@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 Dan Haywood
+ *  Copyright 2013~2014 Dan Haywood
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -14,21 +14,8 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+package org.isisaddons.wicket.fullcalendar2.cpt.applib;
 
-.calendarEventableCollectionAsFullCalendar2 .selector {
-	float: right;
-	margin-bottom: -25px;
-	margin-top: 10px;
-}
-
-.calendarEventableCollectionAsFullCalendar2 .fc-header-title {
-	margin-top: 5px;
-}
-
-.calendarEventableCollectionAsFullCalendar2 div.fc-event-inner {
-    cursor: pointer;
-}
-
-.calendarEventableCollectionAsFullCalendar2 ul.selector {
-	list-style-type: none;
+public final class FullCalendar2ApplibModule {
+    private FullCalendar2ApplibModule(){}
 }
