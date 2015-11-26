@@ -16,6 +16,7 @@
  */
 package org.isisaddons.wicket.fullcalendar2.cpt.ui;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Set;
 
@@ -95,7 +96,7 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
         config.setAllDaySlot(false);
         config.setSlotEventOverlap(false);
         config.setLazyFetching(true);
-        config.setFirstDay(1);
+        config.setFirstDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
 
         final FullCalendar calendar = new FullCalendarWithEventHandling(ID_FULL_CALENDAR, config, feedback);
         addOrReplace(calendar);
@@ -119,4 +120,5 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
 
         PanelUtil.renderHead(response, getClass());
     }
+
 }
