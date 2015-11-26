@@ -95,8 +95,7 @@ public abstract class CalendaredCollectionAbstract extends PanelAbstract<EntityC
         config.setAllDaySlot(false);
         config.setSlotEventOverlap(false);
         config.setLazyFetching(true);
-
-        System.out.println(config.toString());
+        config.setFirstDay(1);
 
         final FullCalendar calendar = new FullCalendarWithEventHandling(ID_FULL_CALENDAR, config, feedback);
         addOrReplace(calendar);
